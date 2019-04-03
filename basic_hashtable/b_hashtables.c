@@ -157,7 +157,8 @@ void destroy_hash_table(BasicHashTable *ht)
     {
         if (ht->storage[i] != NULL)
         {
-            free(ht->storage[i]);
+            // free(ht->storage[i]);
+            destroy_pair(ht->storage[i]);
         }
     }
     free(ht->storage);
