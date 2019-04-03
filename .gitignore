@@ -8,3 +8,7 @@ build
 
 */b_hashtables
 */hashtables
+
+*.stackdump
+*.exe
+.vscode
