@@ -73,11 +73,11 @@ unsigned int hash(char *str, int max)
 BasicHashTable *create_hash_table(int capacity)
 {
     // struct
-    BasicHashTable *ht = malloc(sizeof(BasicHashTable));
+    BasicHashTable *ht = malloc(sizeof(BasicHashTable *));
     // capacity
-    ht->capacity = 0;
+    ht->capacity = capacity;
     // storage
-    ht->storage = calloc(capacity, sizeof(Pair));
+    ht->storage = calloc(capacity, sizeof(Pair *));
 
     return ht;
 }
@@ -91,6 +91,21 @@ BasicHashTable *create_hash_table(int capacity)
  ****/
 void hash_table_insert(BasicHashTable *ht, char *key, char *value)
 {
+    printf("~~~hash_table_insert~~~\n");
+    int hashKey = hash(key, ht->capacity);
+    // printf("hashKey: %i\n", hashKey);
+
+    Pair *newPair = create_pair(strdup(key), strdup(value));
+
+    if (ht->storage[hashKey] != NULL)
+    {
+        printf("Warning! Value \"%s\" with key \"%s\" at index %i already exists. Overwriting!\n", ht->storage[hashKey]->value, ht->storage[hashKey]->key, hashKey);
+        destroy_pair(ht->storage[hashKey]);
+    }
+
+    ht->storage[hashKey] = newPair;
+    // printf("New key: %s\n", ht->storage[hashKey]->key);
+    // printf("New value: %s\n", ht->storage[hashKey]->value);
 }
 
 /****
