@@ -119,7 +119,8 @@ void hash_table_remove(BasicHashTable *ht, char *key)
     int hashKey = hash(key, ht->capacity);
     if (ht->storage[hashKey] != NULL)
     {
-        free(ht->storage[hashKey]);
+        destroy_pair(ht->storage[hashKey]);
+        // free(ht->storage[hashKey]);
         ht->storage[hashKey] = NULL;
     }
     else
