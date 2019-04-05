@@ -21,7 +21,7 @@ typedef struct LinkedPair
  */
 // NOTE: If we add an additional pointer array to this, we can use it to track
 // the end of the linked list for each index, shaving off some time during
-// resize and insert if an index's linked list grows particularly large.
+// resize and insert (maybe) if an index's linked list grows particularly large.
 typedef struct HashTable
 {
     int capacity;
@@ -97,7 +97,7 @@ HashTable *create_hash_table(int capacity)
   added to the corresponding LinkedPair list.
 
   Inserting values to the same index with existing keys can overwrite
-  the value in th existing LinkedPair list.
+  the value in the existing LinkedPair list.
  */
 void hash_table_insert(HashTable *ht, char *key, char *value)
 {
@@ -113,9 +113,28 @@ void hash_table_insert(HashTable *ht, char *key, char *value)
         LinkedPair *curNode = ht->storage[hashKey];
         while (curNode->next != NULL)
         {
-            curNode = curNode->next;
+            if (strcmp(curNode->key, key) == 0)
+            {
+                // work on the current iteration of the node
+                break;
+            }
+            else
+            {
+                // keep going to the next node
+                curNode = curNode->next;
+            }
         }
-        curNode->next = newNode;
+        // check if the curNode key and the passed key match
+        // if so, replace the curNode value
+        if (strcmp(curNode->key, key) == 0)
+        {
+            curNode->value = strdup(value);
+        }
+        // otherwise, we've hit the end of the linked list, and we can insert a new node
+        else
+        {
+            curNode->next = newNode;
+        }
     }
 }
 
