@@ -19,6 +19,9 @@ typedef struct LinkedPair
 /*
   Hash table with linked pairs.
  */
+// NOTE: If we add an additional pointer array to this, we can use it to track
+// the end of the linked list for each index, shaving off some time during
+// resize and insert if an index's linked list grows particularly large.
 typedef struct HashTable
 {
     int capacity;
@@ -98,6 +101,22 @@ HashTable *create_hash_table(int capacity)
  */
 void hash_table_insert(HashTable *ht, char *key, char *value)
 {
+    int hashKey = hash(key, ht->capacity);
+    LinkedPair *newNode = create_pair(strdup(key), strdup(value));
+
+    if (ht->storage[hashKey] == NULL)
+    {
+        ht->storage[hashKey] = newNode;
+    }
+    else
+    {
+        LinkedPair *curNode = ht->storage[hashKey];
+        while (curNode->next != NULL)
+        {
+            curNode = curNode->next;
+        }
+        curNode->next = newNode;
+    }
 }
 
 /*
