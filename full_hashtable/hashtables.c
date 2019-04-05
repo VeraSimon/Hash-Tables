@@ -102,7 +102,7 @@ HashTable *create_hash_table(int capacity)
 void hash_table_insert(HashTable *ht, char *key, char *value)
 {
     int hashKey = hash(key, ht->capacity);
-    LinkedPair *newNode = create_pair(strdup(key), strdup(value));
+    LinkedPair *newNode = create_pair(key, value);
 
     if (ht->storage[hashKey] == NULL)
     {
@@ -189,6 +189,21 @@ void hash_table_remove(HashTable *ht, char *key)
  */
 char *hash_table_retrieve(HashTable *ht, char *key)
 {
+    int hashKey = hash(key, ht->capacity);
+
+    if (ht->storage[hashKey] != NULL)
+    {
+        LinkedPair *curNode = ht->storage[hashKey];
+        do
+        {
+            if (strcmp(curNode->key, key) == 0)
+            {
+                return curNode->value;
+            }
+            curNode = curNode->next;
+        } while (curNode->next != NULL);
+    }
+
     return NULL;
 }
 
